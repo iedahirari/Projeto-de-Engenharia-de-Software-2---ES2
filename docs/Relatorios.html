@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Para onde vai o dinheiro público de Mogi das Cruzes: gastos por área (saúde, educação, transporte) e quanto o Estado repassou à cidade.">
+	<meta name="theme-color" content="#16245a">
+	<title>Relatórios · MONITORAÊ</title>
+	<link rel="icon" type="image/svg+xml" href="imgs/icone.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+	<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+	<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+	<header id="cabecalho"></header>
+
+	<main id="conteudo">
+		<section class="topo-pagina">
+			<div class="container">
+				<div class="trilha"><a href="index.html">Início</a> / Relatórios</div>
+				<h1>Para onde vai o dinheiro de Mogi</h1>
+				<p>Quanto a prefeitura gastou em saúde, educação, transporte e outras áreas, de onde veio esse dinheiro e quanto o Governo do Estado repassou à cidade.</p>
+			</div>
+		</section>
+
+		<div class="container conteudo-sobreposto">
+			<div class="cartao">
+				<div class="seletor-ano">
+					<span class="seletor-ano-rotulo" id="rotulo-anos">Escolha o ano</span>
+					<div class="anos" role="group" aria-labelledby="rotulo-anos" id="anos"></div>
+				</div>
+				<p class="periodo-aviso" id="periodo-aviso"></p>
+			</div>
+
+			<div class="numeros numeros--relatorio" id="numeros">
+				<div class="numero"><span class="numero-icone" data-icone="dinheiro"></span><span><strong data-numero="gasto">–</strong><span>gastos pela prefeitura</span></span></div>
+				<div class="numero"><span class="numero-icone" data-icone="pessoas"></span><span><strong data-numero="habitante">–</strong><span>por habitante</span></span></div>
+				<div class="numero"><span class="numero-icone" data-icone="predio"></span><span><strong data-numero="estado">–</strong><span>repassados pelo Estado</span></span></div>
+				<div class="numero"><span class="numero-icone" data-icone="grafico"></span><span><strong data-numero="arrecadado">–</strong><span>arrecadados no total</span></span></div>
+			</div>
+
+			<div class="relatorio-grade">
+				<section class="cartao bloco" aria-labelledby="titulo-areas">
+					<h2 class="bloco-titulo" id="titulo-areas">Para onde foi o dinheiro</h2>
+					<p class="bloco-explicacao">Despesas por área de governo. Clique em uma área para ver em que ela foi gasta.</p>
+					<div id="areas"></div>
+				</section>
+
+				<div>
+					<section class="cartao bloco" aria-labelledby="titulo-origem">
+						<h2 class="bloco-titulo" id="titulo-origem">De onde veio o dinheiro</h2>
+						<div class="barra-empilhada" id="origem-barra" role="img"></div>
+						<ul class="legenda" id="origem-legenda"></ul>
+					</section>
+
+					<section class="cartao bloco destaque-estado" aria-labelledby="titulo-estado">
+						<h2 class="bloco-titulo" id="titulo-estado">O que o Estado de SP repassou</h2>
+						<p class="estado-total" id="estado-total"></p>
+						<dl class="fatos" id="estado-detalhe"></dl>
+						<p class="bloco-explicacao">A Constituição obriga o Estado a dividir com os municípios parte do que arrecada: 25% do ICMS e 50% do IPVA dos carros emplacados na cidade. Os valores de ICMS e IPVA são brutos; parte deles vai para o FUNDEB, o fundo da educação básica.</p>
+					</section>
+				</div>
+			</div>
+
+			<section class="cartao bloco" aria-labelledby="titulo-evolucao">
+				<h2 class="bloco-titulo" id="titulo-evolucao">Evolução ano a ano</h2>
+				<p class="bloco-explicacao">Gastos em saúde e educação e repasses do Estado em cada ano. Os anos ainda em andamento aparecem com os valores parciais.</p>
+				<div class="evolucao" id="evolucao"></div>
+				<ul class="legenda">
+					<li><i style="background:var(--mogi-vermelho)"></i>Saúde</li>
+					<li><i style="background:var(--mogi-azul)"></i>Educação</li>
+					<li><i style="background:var(--mogi-ouro)"></i>Repasse do Estado</li>
+				</ul>
+			</section>
+
+			<section class="cartao bloco" aria-labelledby="titulo-glossario">
+				<h2 class="bloco-titulo" id="titulo-glossario">Entenda os termos</h2>
+				<dl class="glossario">
+					<div><dt>Despesa liquidada</dt><dd>Gasto em que o serviço já foi prestado ou o produto já foi entregue, e a prefeitura reconheceu que precisa pagar. É o valor mostrado nesta página.</dd></div>
+					<div><dt>Cota-parte do ICMS</dt><dd>Parte do imposto estadual sobre mercadorias e serviços que o Estado repassa para a cidade, de acordo com a atividade econômica de cada município.</dd></div>
+					<div><dt>Cota-parte do IPVA</dt><dd>Metade do IPVA pago pelos donos de veículos registrados em Mogi das Cruzes volta para a cidade.</dd></div>
+					<div><dt>FUNDEB</dt><dd>Fundo que junta parte dos impostos de estados e municípios e redistribui o dinheiro para a educação básica, de acordo com o número de alunos.</dd></div>
+					<div><dt>Encargos especiais</dt><dd>Pagamento de dívidas, precatórios (dívidas judiciais) e outros compromissos que não pertencem a uma área específica.</dd></div>
+				</dl>
+			</section>
+
+			<p class="aviso-fonte" id="origemDados"></p>
+		</div>
+	</main>
+
+	<footer id="rodape"></footer>
+
+	<script src="js/monitorae.js"></script>
+	<script>
+		montarLayout('relatorios');
+
+		document.querySelectorAll('[data-icone]').forEach(function (el) { el.innerHTML = icone(el.dataset.icone); });
+
+		// Nomes das áreas em linguagem simples
+		var AREAS = {
+			'Previdência Social': 'Previdência (aposentadorias de servidores)',
+			'Saneamento': 'Saneamento (água e esgoto)',
+			'Urbanismo': 'Urbanismo (ruas, praças e obras)',
+			'Encargos Especiais': 'Encargos especiais (dívidas e precatórios)',
+			'Administração': 'Administração da prefeitura',
+			'Transporte': 'Transporte e trânsito',
+			'Legislativa': 'Câmara Municipal',
+			'Energia': 'Energia (iluminação pública)',
+			'Desporto e Lazer': 'Esporte e lazer',
+			'Gestão Ambiental': 'Meio ambiente'
+		};
+
+		var ORIGENS = [
+			{ chave: 'impostos', nome: 'Impostos da cidade (IPTU, ISS, ITBI…)', cor: 'var(--mogi-azul)' },
+			{ chave: 'estado', nome: 'Governo do Estado', cor: 'var(--mogi-vermelho)' },
+			{ chave: 'uniao', nome: 'Governo Federal', cor: 'var(--mogi-ouro)' },
+			{ chave: 'fundeb', nome: 'FUNDEB (educação)', cor: 'var(--mogi-verde)' },
+			{ chave: 'emprestimos', nome: 'Empréstimos', cor: 'var(--texto)' },
+			{ chave: 'outras', nome: 'Serviços, aplicações e outras', cor: 'var(--texto-suave)' }
+		];
+
+		var financas;
+
+		function milhoes(valor) {
+			if (valor >= 1e9) return 'R$ ' + (valor / 1e9).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' bi';
+			if (valor < 1e6) return 'R$ ' + Math.round(valor / 1e3).toLocaleString('pt-BR') + ' mil';
+			return 'R$ ' + (valor / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
+		}
+
+		function porcento(parte, total) {
+			return (parte / total * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
+		}
+
+		function mostrarAno(ano) {
+			var dados = financas.anos.find(function (a) { return a.ano === ano; }) || financas.anos[0];
+			history.replaceState(null, '', '?ano=' + dados.ano);
+
+			document.querySelectorAll('.anos button').forEach(function (b) {
+				b.setAttribute('aria-pressed', Number(b.dataset.ano) === dados.ano);
+			});
+			document.getElementById('periodo-aviso').innerHTML = dados.periodo === 6
+				? 'Mostrando o <strong>ano completo de ' + dados.ano + '</strong>.'
+				: 'Mostrando <strong>' + dados.ano + ' ' + escaparHTML(dados.ate) + '</strong>. O ano ainda não terminou: os valores vão aumentar a cada novo relatório bimestral.';
+
+			document.querySelector('[data-numero="gasto"]').textContent = milhoes(dados.despesaTotal);
+			document.querySelector('[data-numero="habitante"]').textContent = formatarReais(dados.despesaTotal / dados.populacao, 0);
+			document.querySelector('[data-numero="estado"]').textContent = milhoes(dados.receitas.estado);
+			document.querySelector('[data-numero="arrecadado"]').textContent = milhoes(dados.receitaTotal);
+
+			// Para onde foi --------------------------------------------------
+			var maior = dados.despesas[0].valor;
+			document.getElementById('areas').innerHTML = dados.despesas.filter(function (f) { return f.valor > 0; }).map(function (f, i) {
+				var nome = AREAS[f.funcao] || f.funcao;
+				var subs = f.subfuncoes.filter(function (s) { return s.valor > 0; });
+				var cabeca = '<span class="area-linha"><span class="area-nome">' + escaparHTML(nome) + '</span>' +
+					'<span class="area-valor">' + milhoes(f.valor) + ' <small>' + porcento(f.valor, dados.despesaTotal) + '</small></span></span>' +
+					'<span class="barra' + (i < 2 ? ' barra--destaque' : '') + '"><i style="width:' + (f.valor / maior * 100).toFixed(1) + '%"></i></span>';
+				if (!subs.length) return '<div class="area">' + cabeca + '</div>';
+				return '<details class="area"><summary>' + cabeca + '</summary><ul class="subareas">' +
+					subs.map(function (s) {
+						return '<li><span>' + escaparHTML(s.nome) + '</span><span>' + milhoes(s.valor) + '</span></li>';
+					}).join('') + '</ul></details>';
+			}).join('');
+
+			// De onde veio ---------------------------------------------------
+			var positivas = ORIGENS.filter(function (o) { return dados.receitas[o.chave] > 0; });
+			var barra = document.getElementById('origem-barra');
+			barra.innerHTML = positivas.map(function (o) {
+				return '<i style="width:' + (dados.receitas[o.chave] / dados.receitaTotal * 100).toFixed(2) + '%;background:' + o.cor + '" title="' + escaparHTML(o.nome) + '"></i>';
+			}).join('');
+			barra.setAttribute('aria-label', positivas.map(function (o) {
+				return o.nome + ': ' + porcento(dados.receitas[o.chave], dados.receitaTotal);
+			}).join('; '));
+			document.getElementById('origem-legenda').innerHTML = positivas.map(function (o) {
+				return '<li><i style="background:' + o.cor + '"></i><span>' + escaparHTML(o.nome) + '</span>' +
+					'<strong>' + milhoes(dados.receitas[o.chave]) + '</strong><small>' + porcento(dados.receitas[o.chave], dados.receitaTotal) + '</small></li>';
+			}).join('');
+
+			// Estado ---------------------------------------------------------
+			var d = dados.detalhe;
+			document.getElementById('estado-total').innerHTML = '<strong>' + formatarReais(dados.receitas.estado, 0) + '</strong> em ' +
+				(dados.periodo === 6 ? dados.ano : dados.ano + ' ' + escaparHTML(dados.ate)) + ', ou ' +
+				porcento(dados.receitas.estado, dados.receitaTotal) + ' de tudo o que a cidade arrecadou. Isso dá ' +
+				formatarReais(dados.receitas.estado / dados.populacao, 0) + ' por morador.';
+			document.getElementById('estado-detalhe').innerHTML =
+				'<div class="fato fato--destaque"><dt>Cota-parte do ICMS</dt><dd>' + milhoes(d.icms) + '</dd></div>' +
+				'<div class="fato fato--destaque"><dt>Cota-parte do IPVA</dt><dd>' + milhoes(d.ipva) + '</dd></div>' +
+				'<div class="fato"><dt>Para comparar: IPTU</dt><dd>' + milhoes(d.iptu) + '</dd></div>' +
+				'<div class="fato"><dt>Para comparar: ISS</dt><dd>' + milhoes(d.iss) + '</dd></div>';
+		}
+
+		function desenharEvolucao() {
+			var anos = financas.anos.slice().reverse();
+			var valor = function (a, funcao) {
+				var f = a.despesas.find(function (x) { return x.funcao === funcao; });
+				return f ? f.valor : 0;
+			};
+			var maior = Math.max.apply(null, anos.map(function (a) { return Math.max(valor(a, 'Saúde'), valor(a, 'Educação'), a.receitas.estado); }));
+			document.getElementById('evolucao').innerHTML = anos.map(function (a) {
+				var colunas = [
+					{ v: valor(a, 'Saúde'), cor: 'var(--mogi-vermelho)', nome: 'Saúde' },
+					{ v: valor(a, 'Educação'), cor: 'var(--mogi-azul)', nome: 'Educação' },
+					{ v: a.receitas.estado, cor: 'var(--mogi-ouro)', nome: 'Repasse do Estado' }
+				];
+				return '<button type="button" class="evolucao-ano' + (a.periodo < 6 ? ' parcial' : '') + '" data-ano="' + a.ano + '" aria-label="' +
+					a.ano + ': ' + colunas.map(function (c) { return c.nome + ' ' + milhoes(c.v); }).join(', ') + '">' +
+					'<span class="evolucao-colunas">' + colunas.map(function (c) {
+						return '<i style="height:' + (c.v / maior * 100).toFixed(1) + '%;background:' + c.cor + '" title="' + c.nome + ': ' + milhoes(c.v) + '"></i>';
+					}).join('') + '</span><span class="evolucao-rotulo">' + a.ano + (a.periodo < 6 ? '*' : '') + '</span></button>';
+			}).join('');
+			document.querySelectorAll('.evolucao-ano').forEach(function (b) {
+				b.addEventListener('click', function () { mostrarAno(Number(b.dataset.ano)); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+			});
+		}
+
+		carregarJSON('financas').then(function (dados) {
+			financas = dados;
+			document.getElementById('anos').innerHTML = dados.anos.map(function (a) {
+				return '<button type="button" data-ano="' + a.ano + '" aria-pressed="false">' + a.ano +
+					(a.periodo < 6 ? ' <small>parcial</small>' : '') + '</button>';
+			}).join('');
+			document.querySelectorAll('.anos button').forEach(function (b) {
+				b.addEventListener('click', function () { mostrarAno(Number(b.dataset.ano)); });
+			});
+
+			// Começa no último ano completo, que é mais fácil de comparar
+			var pedido = Number(new URLSearchParams(location.search).get('ano'));
+			var completo = dados.anos.find(function (a) { return a.periodo === 6; }) || dados.anos[0];
+			mostrarAno(pedido || completo.ano);
+			desenharEvolucao();
+
+			document.getElementById('origemDados').innerHTML = icone('info') + '<span>Fonte: Relatório Resumido da Execução Orçamentária (RREO) que a prefeitura envia ao ' +
+				'<a href="' + escaparHTML(dados.fonte) + '" target="_blank" rel="noopener">Tesouro Nacional (SICONFI)</a>. ' +
+				'Dados coletados automaticamente pelo nosso crawler' + (dados.coletadoEm ? ' em ' + escaparHTML(dataBR(dados.coletadoEm)) : '') + '.</span>';
+		}).catch(function (erro) {
+			mostrarErro(document.getElementById('areas'), erro);
+		});
+	</script>
+</body>
+</html>

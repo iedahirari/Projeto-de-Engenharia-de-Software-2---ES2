@@ -1,0 +1,9 @@
+# Credenciais locais do banco (copie crawler/conexao.example.php)
+crawler/conexao.php
+
+# Dependências instaladas (composer install / npm install)
+vendor/
+node_modules/
+
+# Configuração local do Claude Code
+.claude/

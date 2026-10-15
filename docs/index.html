@@ -1,117 +1,305 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 	<meta charset="utf-8">
-	<link rel="shortcut icon" type="image/x-png" href="./imgs/Icon.png"/>
-	<link rel="stylesheet" type="text/css" href="./css/index.css">
-	<title> MONITORAÊ </title>
-	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-	<script>
-		jQuery(document).ready(function($){
-			$(".scroll").click(function(event){
-				event.preventDefault();
-				$("html,body").animate({scrollTop:$(this.hash).offset().top},800);
-			});
-		});
-	</script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="MONITORAÊ: acompanhe vereadores, prefeito e servidores públicos de Mogi das Cruzes com dados abertos e linguagem simples.">
+	<meta name="theme-color" content="#16245a">
+	<title>MONITORAÊ · Transparência em Mogi das Cruzes</title>
+	<link rel="icon" type="image/svg+xml" href="imgs/icone.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+	<link rel="stylesheet" href="css/estilo.css">
 </head>
-<body>	
-	<!-- MENU -->
-		<div class="header-2">
-		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-		 <a href="index.html"> <img src="./imgs/logo.png" ></a>
-		 <div class="menu">
-			<ul>
-				<li>
-					<a href="PerfilPrefeito.html">Prefeito</a>
-				</li>
-				<li>
-					<a href="PerfilVereador.html">Vereadores</a>
-				</li>
-				<li>
-					<a href="#bg-2">Servidores</a>
-				</li>
-				<li>
-					<a  class="scroll" href="#session2">Notícias</a>
-				</li>
-				<li>
-					<a class="scroll" href="#session3">Dashboard</a>
-				</li>
-				<li>
-					<a href="#bg"> Relatórios</a>
-				</li>
-			</ul>
-		 </div>
-		 <div class="busca">
-				<input id="home" type="text" placeholder="O que você procura?                        " value="" tabindex="1" autocomplete="off">
-		 </div>
-		</div>
-		<!-- SESSION 1 - vereadores -->
-		<div id="session1" class="vereadores-lista" >
-			
-		</div>
-			<!-- SESSION 2 - noticias -->
-		<div id="session2" class="noticias-lista"> 
-			
-		</div>
-			<!-- SESSION 3 - dashboard -->
-		<div id="session3" class="dashboard-lista">
-			
-		</div>
-			<!-- SESSION 4 - rodape -->
-		<div id="session4" class="rodape-lista">
-		</div>
-		<!-- POP UP relatorios -->
-		<div id="bg"> </div>
-		<div class="box">
-			<a href="" id="close"> x </a>
-			<div class="tituloRel">
-				RELATÓRIOS 
-			</div>
-			<p>
-			  Pesquise de acordo com os filtros os relatórios que desejar!
-			</p>
-			<div class="tipo">
-				<form method="post" action="">
-					<select name="relatorio" style="width:150px;" >
-						<option value="selecione">Selecione</option>
-						<option value="gastos">Gastos </option>
-						<option value="projetos">Projetos</option>
-					</select>
-				</form>
-			</div>
+<body>
+	<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+	<header id="cabecalho"></header>
 
-			<div class="classi">
-				<form method="post" action="">
-					<select name="relatorio">
-						<option value="selecione">Selecione</option>
-						<option value="gastos">Geral </option>
-						<option value="projetos">Individual</option>
-					</select>
-				</form>
-		     </div>
+	<main id="conteudo">
+		<!-- Hero ------------------------------------------------------------>
+		<section class="hero">
+			<svg class="hero-estrela hero-estrela--1" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>
+			<svg class="hero-estrela hero-estrela--2" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>
+			<svg class="hero-estrela hero-estrela--3" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>
+			<div class="container">
+				<span class="hero-rotulo">Transparência pública · Mogi das Cruzes</span>
+				<h1>Acompanhe <em>quem governa</em> e quem trabalha para a sua cidade</h1>
+				<p class="lead">Vereadores, prefeito, projetos de lei e salários de servidores públicos reunidos em um só lugar, com dados abertos e linguagem simples.</p>
 
-		     <div class="periodo">
-				<input id="peri1" type="date" id="diaa" name="diaa">
-		     	<label> á </label>
-		     	<input id="peri2" type="date" id="diaa" name="diaa">
-		     </div>
-			<div class="rela">
-				<button id="rela">Gerar Relatório</button>
+				<div class="busca" role="search">
+					<label class="visualmente-oculto" for="busca-geral">Buscar vereador, partido ou servidor</label>
+					<div class="busca-campo">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+						<input id="busca-geral" type="search" placeholder="Busque um vereador, partido ou servidor" autocomplete="off"
+							role="combobox" aria-expanded="false" aria-controls="busca-sugestoes" aria-autocomplete="list">
+						<button class="botao botao--ouro" type="button" id="busca-botao">Buscar</button>
+					</div>
+					<ul class="busca-sugestoes" id="busca-sugestoes" role="listbox" hidden></ul>
+				</div>
 			</div>
-			<div class="mensagem2"> Seu relatório será gerado em formato PDF! basta clicar no botão acima.
+		</section>
+
+		<!-- Números ---------------------------------------------------------->
+		<div class="container">
+			<div class="numeros" id="numeros">
+				<a class="numero" href="PerfilVereador.html">
+					<span class="numero-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span>
+					<span><strong data-numero="vereadores">–</strong><span>vereadores</span></span>
+				</a>
+				<a class="numero" href="#painel">
+					<span class="numero-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>
+					<span><strong data-numero="projetos">–</strong><span>projetos de lei</span></span>
+				</a>
+				<a class="numero" href="Servidores.html">
+					<span class="numero-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span>
+					<span><strong data-numero="servidores">–</strong><span>servidores públicos</span></span>
+				</a>
+				<a class="numero" href="#painel">
+					<span class="numero-icone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+					<span><strong data-numero="folha">–</strong><span>folha mensal</span></span>
+				</a>
 			</div>
 		</div>
-		<!-- POP UP servidores -->
-		<div id="bg-2"> </div>
-		<div class="box-2">
-			<a href="" id="close-2"> x </a>
-			<div class="tituloSer">
-				SERVIDORES 
+
+		<!-- Vereadores ------------------------------------------------------->
+		<section class="secao" id="vereadores">
+			<div class="container">
+				<div class="secao-cabecalho">
+					<div>
+						<span class="sobretitulo">Poder Legislativo</span>
+						<h2>Vereadores de Mogi das Cruzes</h2>
+						<p>Os vereadores discutem e votam leis sobre impostos municipais, educação, transporte, saneamento e outros temas da cidade. Cada um é eleito pelo voto direto para representar a população.</p>
+					</div>
+					<a class="botao botao--contorno" href="PerfilVereador.html">Ver perfis completos</a>
+				</div>
+				<div class="grade grade--4" id="grade-vereadores">
+					<div class="cartao esqueleto" style="height:190px"></div>
+					<div class="cartao esqueleto" style="height:190px"></div>
+					<div class="cartao esqueleto" style="height:190px"></div>
+					<div class="cartao esqueleto" style="height:190px"></div>
+				</div>
 			</div>
-			<p>
-			  Localize com a ajuda dos filtros os servidores que desejar!
-			</p>
-		</div>
+		</section>
+
+		<!-- Painel ----------------------------------------------------------->
+		<section class="secao secao--alternada" id="painel">
+			<div class="container">
+				<div class="secao-cabecalho">
+					<div>
+						<span class="sobretitulo">Painel</span>
+						<h2>Para onde vai o dinheiro da folha</h2>
+						<p id="painel-referencia">Resumo calculado a partir dos dados coletados pelo nosso crawler.</p>
+					</div>
+					<a class="botao botao--primario" href="Servidores.html">Consultar servidores</a>
+				</div>
+				<div class="grade grade--3">
+					<div class="cartao">
+						<h3>Cargos com mais servidores</h3>
+						<ul class="barra-lista" id="painel-cargos"></ul>
+					</div>
+					<div class="cartao">
+						<h3>Faixas de salário bruto</h3>
+						<ul class="barra-lista" id="painel-faixas"></ul>
+					</div>
+					<div class="cartao">
+						<h3>Vereadores por partido</h3>
+						<ul class="barra-lista" id="painel-partidos"></ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Notícias --------------------------------------------------------->
+		<section class="secao" id="noticias">
+			<div class="container">
+				<div class="secao-cabecalho">
+					<div>
+						<span class="sobretitulo">Notícias</span>
+						<h2>Acontece em Mogi</h2>
+						<p>Notícias selecionadas pela equipe em julho de 2020.</p>
+					</div>
+				</div>
+				<div class="grade grade--3">
+					<article class="cartao noticia">
+						<span class="etiqueta etiqueta--verde">Saúde</span>
+						<h3>Mogi das Cruzes inicia campanha de vacinação contra o sarampo</h3>
+						<p>A segunda etapa da Campanha Nacional de Vacinação contra o Sarampo atende o público de 6 meses a 49 anos, em todas as unidades de saúde da cidade, de segunda a sexta, das 8h às 16h30.</p>
+						<a href="https://noticiasdemogi.com.br/mogi-das-cruzes-inicia-campanha-de-vacinacao-contra-o-sarampo-nesta-quarta/" target="_blank" rel="noopener">Ler no Notícias de Mogi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+					</article>
+					<article class="cartao noticia">
+						<span class="etiqueta etiqueta--ouro">Economia</span>
+						<h3>Prefeitura abre chamamento para 37 vagas em feiras livres e varejões</h3>
+						<p>A Secretaria de Agricultura abriu chamamento público para espaços em feiras noturnas e diurnas de vários bairros, como Centro, Vila Industrial, Braz Cubas e Jardim Maricá.</p>
+						<a href="https://noticiasdemogi.com.br/prefeitura-de-mogi-abre-chamamento-para-37-vagas-em-feiras-livres-e-varejoes/" target="_blank" rel="noopener">Ler no Notícias de Mogi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+					</article>
+					<article class="cartao noticia">
+						<span class="etiqueta">Cidade</span>
+						<h3>Comitê da Retomada se reúne com clubes para definir reabertura</h3>
+						<p>Com o avanço para a fase amarela do Plano São Paulo, clubes da cidade planejam retomar academias, bares e restaurantes seguindo as regras do Governo do Estado.</p>
+						<a href="https://noticiasdemogi.com.br/comite-gestor-da-retomada-em-mogi-se-reune-com-clubes-para-definir-reabertura/" target="_blank" rel="noopener">Ler no Notícias de Mogi <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<!-- Sobre ------------------------------------------------------------>
+		<section class="secao secao--alternada" id="sobre">
+			<div class="container sobre">
+				<div>
+					<span class="sobretitulo">Sobre o projeto</span>
+					<h2>Feito por estudantes da FATEC Mogi das Cruzes</h2>
+					<p>O MONITORAÊ é um projeto da disciplina de Engenharia de Software II do curso de Análise e Desenvolvimento de Sistemas. A ideia é acompanhar, depois das eleições, o trabalho de quem foi eleito e de quem é pago com dinheiro público na cidade.</p>
+					<p>Um <strong>web crawler</strong> desenvolvido pela equipe coleta automaticamente os dados dos portais oficiais da Prefeitura e da Câmara, e o site apresenta essas informações de forma clara para qualquer cidadão.</p>
+					<p>Professor orientador: <strong>Leandro Luque</strong>.</p>
+				</div>
+				<div class="cartao">
+					<h3>Equipe</h3>
+					<ul class="equipe">
+						<li><span class="inicial" aria-hidden="true">B</span><span>Bruno Stevan<small><a href="mailto:bruno.silva290@fatec.sp.gov.br">bruno.silva290@fatec.sp.gov.br</a></small></span></li>
+						<li><span class="inicial" aria-hidden="true">I</span><span>Ieda de Oliveira<small>Desenvolvimento e requisitos</small></span></li>
+						<li><span class="inicial" aria-hidden="true">M</span><span>Maria Beatriz<small><a href="mailto:maria.silva263@fatec.sp.gov.br">maria.silva263@fatec.sp.gov.br</a></small></span></li>
+						<li><span class="inicial" aria-hidden="true">T</span><span>Thais Ferreira<small><a href="mailto:thais.pereira15@fatec.sp.gov.br">thais.pereira15@fatec.sp.gov.br</a></small></span></li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer id="rodape"></footer>
+
+	<script src="js/monitorae.js"></script>
+	<script>
+		montarLayout('inicio');
+
+		var vereadores = [];
+		var buscaCampo = document.getElementById('busca-geral');
+		var sugestoes = document.getElementById('busca-sugestoes');
+		var ativo = -1;
+
+		function barras(lista, total, classe) {
+			var maior = Math.max.apply(null, lista.map(function (i) { return i.valor; }));
+			return lista.map(function (i) {
+				return '<li><div class="barra-rotulo"><span>' + escaparHTML(i.rotulo) + '</span><span>' + escaparHTML(i.texto) + '</span></div>' +
+					'<div class="barra ' + (classe || '') + '"><i style="width:' + (i.valor / maior * 100).toFixed(1) + '%"></i></div></li>';
+			}).join('');
+		}
+
+		// Busca com sugestões ----------------------------------------------
+		function atualizarSugestoes() {
+			var termo = normalizar(buscaCampo.value.trim());
+			ativo = -1;
+			if (!termo) {
+				sugestoes.hidden = true;
+				buscaCampo.setAttribute('aria-expanded', 'false');
+				return;
+			}
+			var achados = vereadores.filter(function (v) {
+				return normalizar(v.nome).indexOf(termo) !== -1 || normalizar(v.partido) === termo;
+			}).slice(0, 6);
+
+			sugestoes.innerHTML = achados.map(function (v) {
+				return '<li role="option"><a href="PerfilVereador.html?id=' + v.codigo + '"><img src="' + escaparHTML(v.imagem) + '" alt=""><span>' +
+					escaparHTML(nomeProprio(v.nome)) + '<small>Vereador(a) · ' + escaparHTML(v.partido) + '</small></span></a></li>';
+			}).join('') +
+				'<li role="option"><a href="Servidores.html?busca=' + encodeURIComponent(buscaCampo.value.trim()) + '"><span class="busca-icone-item">' + icone('predio') + '</span><span>Buscar “' +
+				escaparHTML(buscaCampo.value.trim()) + '” entre os servidores<small>Nome, cargo ou RGF</small></span></a></li>';
+			sugestoes.hidden = false;
+			buscaCampo.setAttribute('aria-expanded', 'true');
+		}
+
+		function irParaPrimeira() {
+			var link = sugestoes.querySelectorAll('a')[ativo >= 0 ? ativo : 0];
+			if (link && !sugestoes.hidden) location.href = link.href;
+		}
+
+		buscaCampo.addEventListener('input', atualizarSugestoes);
+		buscaCampo.addEventListener('keydown', function (e) {
+			var links = sugestoes.querySelectorAll('a');
+			if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+				e.preventDefault();
+				ativo = (ativo + (e.key === 'ArrowDown' ? 1 : -1) + links.length) % links.length;
+				links.forEach(function (l, i) { l.classList.toggle('ativo', i === ativo); });
+			} else if (e.key === 'Enter') {
+				irParaPrimeira();
+			} else if (e.key === 'Escape') {
+				sugestoes.hidden = true;
+			}
+		});
+		document.getElementById('busca-botao').addEventListener('click', function () {
+			atualizarSugestoes();
+			irParaPrimeira();
+		});
+		document.addEventListener('click', function (e) {
+			if (!e.target.closest('.busca')) sugestoes.hidden = true;
+		});
+
+		// Vereadores ---------------------------------------------------------
+		carregarJSON('vereadores').then(function (lista) {
+			vereadores = lista;
+			document.querySelector('[data-numero="vereadores"]').textContent = lista.length;
+			document.getElementById('grade-vereadores').innerHTML = lista.map(function (v) {
+				return '<a class="cartao pessoa" href="PerfilVereador.html?id=' + v.codigo + '">' +
+					'<img class="avatar" src="' + escaparHTML(v.imagem) + '" alt="" loading="lazy">' +
+					'<span class="pessoa-nome">' + escaparHTML(nomeProprio(v.nome)) + '</span>' +
+					'<span class="etiqueta">' + escaparHTML(v.partido) + '</span></a>';
+			}).join('');
+
+			var partidos = {};
+			lista.forEach(function (v) { partidos[v.partido] = (partidos[v.partido] || 0) + 1; });
+			document.getElementById('painel-partidos').innerHTML = barras(Object.keys(partidos).map(function (p) {
+				return { rotulo: p, valor: partidos[p], texto: partidos[p] + (partidos[p] > 1 ? ' vereadores' : ' vereador') };
+			}).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 6), lista.length, 'barra--ouro');
+		}).catch(function (erro) { mostrarErro(document.getElementById('grade-vereadores'), erro); });
+
+		carregarJSON('projetos').then(function (lista) {
+			document.querySelector('[data-numero="projetos"]').textContent = lista.length;
+		});
+
+		// Painel dos servidores ------------------------------------------------
+		carregarJSON('servidores').then(function (servidores) {
+			var dados = servidores.dados;
+			var valores = dados.map(function (s) { return paraNumero(s[3]); });
+			var total = valores.reduce(function (a, b) { return a + b; }, 0);
+
+			document.querySelector('[data-numero="servidores"]').textContent = formatarNumero(dados.length);
+			document.querySelector('[data-numero="folha"]').textContent = 'R$ ' + (total / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
+
+			if (servidores.referencia) {
+				document.getElementById('painel-referencia').innerHTML = 'Folha de <strong>' + escaparHTML(servidores.referencia) +
+					'</strong>: ' + formatarReais(total, 0) + ' em salários brutos, média de ' + formatarReais(total / dados.length) + ' por servidor.';
+			}
+
+			// Agrupa cargos ignorando acentos ("SERVIÇOS" e "SERVICOS" são o mesmo cargo)
+			var cargos = {};
+			dados.forEach(function (s) {
+				var chave = normalizar(s[2]);
+				if (!cargos[chave]) cargos[chave] = { rotulo: nomeProprio(s[2]), valor: 0 };
+				if (/[^\x00-\x7f]/.test(s[2])) cargos[chave].rotulo = nomeProprio(s[2]); // prefere a grafia com acento
+				cargos[chave].valor++;
+			});
+			document.getElementById('painel-cargos').innerHTML = barras(Object.keys(cargos).map(function (c) {
+				var item = cargos[c];
+				item.texto = formatarNumero(item.valor);
+				return item;
+			}).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 6));
+
+			var faixas = [
+				{ rotulo: 'Até R$ 2 mil', max: 2000 },
+				{ rotulo: 'R$ 2 mil a 4 mil', max: 4000 },
+				{ rotulo: 'R$ 4 mil a 6 mil', max: 6000 },
+				{ rotulo: 'R$ 6 mil a 10 mil', max: 10000 },
+				{ rotulo: 'R$ 10 mil a 20 mil', max: 20000 },
+				{ rotulo: 'Acima de R$ 20 mil', max: Infinity }
+			].map(function (f) { f.valor = 0; return f; });
+			valores.forEach(function (v) {
+				for (var i = 0; i < faixas.length; i++) { if (v <= faixas[i].max) { faixas[i].valor++; break; } }
+			});
+			document.getElementById('painel-faixas').innerHTML = barras(faixas.map(function (f) {
+				f.texto = formatarNumero(f.valor) + ' (' + Math.round(f.valor / dados.length * 100) + '%)';
+				return f;
+			}));
+		}).catch(function (erro) { mostrarErro(document.getElementById('painel-cargos'), erro); });
+	</script>
 </body>
 </html>

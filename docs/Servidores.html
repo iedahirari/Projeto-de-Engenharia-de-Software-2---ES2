@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Consulte nome, cargo e salário dos servidores públicos de Mogi das Cruzes.">
+	<meta name="theme-color" content="#16245a">
+	<title>Servidores · MONITORAÊ</title>
+	<link rel="icon" type="image/svg+xml" href="imgs/icone.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+	<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+	<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+	<header id="cabecalho"></header>
+
+	<main id="conteudo">
+		<section class="topo-pagina">
+			<div class="container">
+				<div class="trilha"><a href="index.html">Início</a> / Servidores</div>
+				<h1>Servidores públicos e estagiários</h1>
+				<p>Gastos com servidores, dentro dos limites da Lei de Responsabilidade Fiscal, podem ser verificados e acompanhados por qualquer cidadão.</p>
+			</div>
+		</section>
+
+		<div class="container conteudo-sobreposto">
+			<div class="cartao">
+				<div class="aviso-fonte" id="origemDados" hidden></div>
+
+				<div class="filtros" role="search">
+					<label class="lista-busca">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+						<span class="visualmente-oculto">Pesquisar por nome, cargo ou RGF</span>
+						<input type="search" id="busca" placeholder="Pesquisar por nome, cargo ou RGF" autocomplete="off">
+					</label>
+					<label>
+						<span class="visualmente-oculto">Servidores por página</span>
+						<select id="por-pagina">
+							<option value="25">25 por página</option>
+							<option value="50">50 por página</option>
+							<option value="100">100 por página</option>
+						</select>
+					</label>
+				</div>
+
+				<p class="resumo-tabela" id="resumo" aria-live="polite">Carregando servidores…</p>
+
+				<div class="tabela-rolagem">
+					<table class="tabela">
+						<thead>
+							<tr>
+								<th data-coluna="0" scope="col"><button type="button">RGF</button></th>
+								<th data-coluna="1" scope="col" aria-sort="ascending"><button type="button">Nome</button></th>
+								<th data-coluna="2" scope="col"><button type="button">Cargo</button></th>
+								<th data-coluna="3" scope="col" class="num"><button type="button">Salário bruto</button></th>
+							</tr>
+						</thead>
+						<tbody id="linhas"></tbody>
+					</table>
+				</div>
+
+				<div class="paginacao">
+					<span id="pagina-info"></span>
+					<div class="paginacao-botoes">
+						<button type="button" id="anterior">Anterior</button>
+						<button type="button" id="proxima">Próxima</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer id="rodape"></footer>
+
+	<script src="js/monitorae.js"></script>
+	<script>
+		montarLayout('servidores');
+
+		var todos = [], filtrados = [], pagina = 1;
+		var ordem = { coluna: 1, direcao: 1 };
+		var campoBusca = document.getElementById('busca');
+		var porPagina = document.getElementById('por-pagina');
+
+		// Destaca o termo buscado sem quebrar o escape de HTML
+		function destacar(texto, termo) {
+			var seguro = escaparHTML(texto);
+			if (!termo) return seguro;
+			var i = normalizar(texto).indexOf(termo);
+			if (i === -1) return seguro;
+			return escaparHTML(texto.slice(0, i)) + '<mark>' + escaparHTML(texto.slice(i, i + termo.length)) + '</mark>' + escaparHTML(texto.slice(i + termo.length));
+		}
+
+		function aplicar() {
+			var termo = normalizar(campoBusca.value.trim());
+			filtrados = todos.filter(function (s) { return !termo || s.chave.indexOf(termo) !== -1; });
+			filtrados.sort(function (a, b) {
+				var x = a.ordem[ordem.coluna], y = b.ordem[ordem.coluna];
+				return (x < y ? -1 : x > y ? 1 : 0) * ordem.direcao;
+			});
+			pagina = 1;
+			desenhar();
+		}
+
+		function desenhar() {
+			var tamanho = Number(porPagina.value);
+			var paginas = Math.max(1, Math.ceil(filtrados.length / tamanho));
+			pagina = Math.min(pagina, paginas);
+			var inicio = (pagina - 1) * tamanho;
+			var termo = normalizar(campoBusca.value.trim());
+
+			document.getElementById('linhas').innerHTML = filtrados.slice(inicio, inicio + tamanho).map(function (s) {
+				var d = s.dados;
+				return '<tr><td data-coluna="rgf">' + destacar(d[0], termo) + '</td>' +
+					'<td data-coluna="nome">' + destacar(d[1], termo) + '</td>' +
+					'<td data-coluna="cargo">' + destacar(d[2], termo) + '</td>' +
+					'<td data-coluna="rendimentos" class="num">R$ ' + escaparHTML(d[3]) + '</td></tr>';
+			}).join('') || '<tr><td colspan="4" class="vazio">Nenhum servidor encontrado.</td></tr>';
+
+			document.getElementById('resumo').textContent = filtrados.length === todos.length
+				? formatarNumero(todos.length) + ' servidores'
+				: formatarNumero(filtrados.length) + ' de ' + formatarNumero(todos.length) + ' servidores';
+			document.getElementById('pagina-info').textContent = 'Página ' + pagina + ' de ' + paginas;
+			document.getElementById('anterior').disabled = pagina <= 1;
+			document.getElementById('proxima').disabled = pagina >= paginas;
+		}
+
+		campoBusca.addEventListener('input', aplicar);
+		porPagina.addEventListener('change', desenhar);
+		document.getElementById('anterior').addEventListener('click', function () { pagina--; desenhar(); });
+		document.getElementById('proxima').addEventListener('click', function () { pagina++; desenhar(); });
+
+		document.querySelectorAll('.tabela th').forEach(function (th) {
+			th.querySelector('button').addEventListener('click', function () {
+				var coluna = Number(th.dataset.coluna);
+				ordem.direcao = ordem.coluna === coluna ? -ordem.direcao : (coluna === 3 ? -1 : 1);
+				ordem.coluna = coluna;
+				document.querySelectorAll('.tabela th').forEach(function (outro) { outro.removeAttribute('aria-sort'); });
+				th.setAttribute('aria-sort', ordem.direcao === 1 ? 'ascending' : 'descending');
+				aplicar();
+			});
+		});
+
+		carregarJSON('servidores').then(function (servidores) {
+			todos = servidores.dados.map(function (d) {
+				return {
+					dados: d,
+					chave: normalizar(d.join(' ')),
+					ordem: [Number(d[0]), normalizar(d[1]), normalizar(d[2]), paraNumero(d[3])]
+				};
+			});
+
+			if (servidores.fonte) {
+				var aviso = document.getElementById('origemDados');
+				aviso.innerHTML = icone('info') + '<span>Dados coletados automaticamente pelo nosso crawler no <a href="' + escaparHTML(servidores.fonte) +
+					'" target="_blank" rel="noopener">portal da prefeitura</a>' +
+					(servidores.referencia ? ' · mês de referência: <strong>' + escaparHTML(servidores.referencia) + '</strong>' : '') +
+					(servidores.coletadoEm ? ' · coletado em ' + escaparHTML(dataBR(servidores.coletadoEm)) : '') + '.</span>';
+				aviso.hidden = false;
+			}
+
+			campoBusca.value = new URLSearchParams(location.search).get('busca') || '';
+			aplicar();
+		}).catch(function (erro) {
+			mostrarErro(document.getElementById('resumo'), erro);
+		});
+	</script>
+</body>
+</html>

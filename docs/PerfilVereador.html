@@ -1,89 +1,140 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<link rel="shortcut icon" type="image/x-png" href="./imgs/Icon.png"/>
-		<link rel="stylesheet" type="text/css" href="./css/index.css">
-		<title> MONITORAÊ </title>
-	</head>
-	<body>	
-		<div class="header-2">
-			 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-			 <a href="index.html"> <img src="./imgs/logo.png" ></a>
-			 <div class="menu">
-				<ul>
-					<li>
-						<a href="PerfilPrefeito.html">Prefeito</a>
-					</li>
-					<li>
-						<a href="PerfilVereador.html">Vereadores</a>
-					</li>
-					<li>
-						<a href="index.html#bg-2">Servidores</a>
-					</li>
-					<li>
-						<a href="index.html#session2">Notícias</a>
-					</li>
-					<li>
-						<a href="index.html#session3">Dashboard</a>
-					</li>
-					<li>
-						<a href="index.html#bg">Relatórios</a>
-					</li>
-				</ul>
-			 </div>
-			 <div class="busca">
-					<input type="text" placeholder="O que você procura?                        " value="" tabindex="1" autocomplete="off">
-			 </div>
-		</div>
-		<div class="lista">
-			<div class="mensagem1">
-				Outros vereadores
-				<div class="busca2">
-					<input class="perfil" type="text" placeholder="    Pesquise por um vereador" value="" tabindex="1" autocomplete="off">
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Perfil dos vereadores de Mogi das Cruzes: dados pessoais, votos, salário e projetos de lei.">
+	<meta name="theme-color" content="#16245a">
+	<title>Vereadores · MONITORAÊ</title>
+	<link rel="icon" type="image/svg+xml" href="imgs/icone.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+	<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+	<a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+	<header id="cabecalho"></header>
+
+	<main id="conteudo">
+		<section class="topo-pagina">
+			<div class="container">
+				<div class="trilha"><a href="index.html">Início</a> / Vereadores</div>
+				<h1>Vereadores</h1>
+				<p>Conheça cada vereador da Câmara Municipal de Mogi das Cruzes: formação, votos recebidos, salário e os projetos de lei que apresentou.</p>
+			</div>
+		</section>
+
+		<div class="container conteudo-sobreposto">
+			<div class="perfil">
+				<aside class="cartao perfil-lateral" aria-label="Lista de vereadores">
+					<label class="lista-busca">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="7"/></svg>
+						<span class="visualmente-oculto">Pesquisar vereador por nome ou partido</span>
+						<input type="search" id="campodepesquisaveredor" placeholder="Nome ou partido" autocomplete="off">
+					</label>
+					<ul class="lista-vereadores" id="lista-vereadores"></ul>
+				</aside>
+
+				<div>
+					<article class="cartao" id="perfil" aria-live="polite">
+						<div class="perfil-cabecalho">
+							<div class="avatar esqueleto"></div>
+							<div style="flex:1">
+								<div class="esqueleto" style="width:40%;margin-bottom:10px"></div>
+								<div class="esqueleto" style="width:70%;height:28px"></div>
+							</div>
+						</div>
+					</article>
+
+					<div class="cartao bloco">
+						<h3 class="bloco-titulo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg> Projetos de lei <span class="etiqueta" id="total-projetos"></span></h3>
+						<div id="listaProjetos">
+							<div class="esqueleto" style="height:64px"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="visao">
-			<div class="foto">
-				<!-- <img src="imgs/foto.png" height="100%" width="70%"> -->
-				<img src="imgs/perfil.png" height="100%" width="90%" id="perfilfoto"> 
-			</div>
-			<div class="nome">
-				SELENA GOMES
-			</div>
-			<div class="dadosPessoais">
-				DADOS PESSOAIS
-			</div>
-			<div class="plenario">
-				ATUAÇÃO NO PLENÁRIO E COMISSÕES
-			</div>
-			<div class="deshboardPerfil">
-				DESHBOARD
-			</div>
-			<div class="projetos">
-				PROJETOS
-			</div>
-			<div class="comentarios">
-				COMENTÁRIOS
-			</div>
-		</div>
-		<div class="dadosv">
-			<div class="bloco1" id="bloco1">
-				<img src="imgs/user.png" height="15%" width="3.5%"> DADOS PESSOAIS 
-			</div>
-			<div class="bloco2" id="bloco2">
-				<img src="imgs/calendar.png" height="15%" width="3.5%">  ATUAÇÃO NO PLENÁRIO E COMISSÕES 
-			</div>
-			<div class="bloco3" id="bloco3">
-				<img src="imgs/graphic.png" height="15%" width="3.5%"> DASHBOARD - GASTOS 
-			</div>
-			<div class="bloco4" id="bloco4">
-				<img src="imgs/project.png" height="15%" width="3.5%">  PROJETOS 
-			</div>
-			<div class="bloco5" id="bloco5">
-				<img src="imgs/comment.png" height="15%" width="3.5%">  COMENTÁRIOS 
-			</div>
-		</div>
-	</body>
+	</main>
+
+	<footer id="rodape"></footer>
+
+	<script src="js/monitorae.js"></script>
+	<script>
+		montarLayout('vereadores');
+
+		var vereadores = [];
+		var idAtual = Number(new URLSearchParams(location.search).get('id')) || 1;
+
+		function mostrarLista(lista) {
+			var ul = document.getElementById('lista-vereadores');
+			if (!lista.length) {
+				ul.innerHTML = '<li class="vazio">Nenhum vereador encontrado.</li>';
+				return;
+			}
+			ul.innerHTML = lista.map(function (v) {
+				return '<li><a href="PerfilVereador.html?id=' + v.codigo + '"' + (v.codigo === idAtual ? ' aria-current="page"' : '') + '>' +
+					'<img src="' + escaparHTML(v.imagem) + '" alt="" loading="lazy"><span>' + escaparHTML(nomeProprio(v.nome)) +
+					'<small>' + escaparHTML(v.partido) + '</small></span></a></li>';
+			}).join('');
+		}
+
+		document.getElementById('campodepesquisaveredor').addEventListener('input', function () {
+			var termo = normalizar(this.value.trim());
+			mostrarLista(vereadores.filter(function (v) {
+				return normalizar(v.nome).indexOf(termo) !== -1 || normalizar(v.partido).indexOf(termo) === 0;
+			}));
+		});
+
+		function fato(rotulo, valor, destaque) {
+			return '<div class="fato' + (destaque ? ' fato--destaque' : '') + '"><dt>' + rotulo + '</dt><dd>' + valor + '</dd></div>';
+		}
+
+		// Alguns vereadores têm site no lugar do e-mail
+		function contato(texto) {
+			var t = String(texto || '').trim();
+			if (!t) return 'Não informado';
+			if (t.indexOf('@') !== -1) return '<a href="mailto:' + escaparHTML(t) + '">' + escaparHTML(t) + '</a>';
+			var url = /^https?:\/\//.test(t) ? t : 'http://' + t;
+			return '<a href="' + escaparHTML(url) + '" target="_blank" rel="noopener">' + escaparHTML(t.replace(/^https?:\/\//, '').replace(/\/+$/, '')) + '</a>';
+		}
+
+		Promise.all([carregarJSON('vereadores'), carregarJSON('projetos')]).then(function (dados) {
+			vereadores = dados[0];
+			mostrarLista(vereadores);
+
+			var v = vereadores.find(function (x) { return x.codigo === idAtual; }) || vereadores[0];
+			document.title = nomeProprio(v.nome) + ' · Vereadores · MONITORAÊ';
+
+			var atual = document.querySelector('.lista-vereadores [aria-current]');
+			if (atual) atual.scrollIntoView({ block: 'nearest' });
+
+			document.getElementById('perfil').innerHTML =
+				'<div class="perfil-cabecalho">' +
+				'<img class="avatar" src="' + escaparHTML(v.imagem) + '" alt="Foto de ' + escaparHTML(nomeProprio(v.nome)) + '">' +
+				'<div><span class="etiqueta">' + escaparHTML(v.partido) + ' · ' + escaparHTML(v.legislatura) + '</span>' +
+				'<h2>' + escaparHTML(nomeProprio(v.nome)) + '</h2>' +
+				'<p>' + escaparHTML(v.atividade ? nomeProprio(v.atividade) : 'Vereador(a)') + ' · ' + escaparHTML(v.votos) + '</p></div></div>' +
+				'<dl class="fatos">' +
+				fato('Salário líquido', v.salario ? 'R$ ' + escaparHTML(v.salario.trim()) : 'Não informado', true) +
+				fato('Votos', escaparHTML(v.votos.replace(/ votos$/i, ''))) +
+				fato('Formação', escaparHTML(nomeProprio(v.formacao) || 'Não informada')) +
+				fato('Nascimento', escaparHTML(v.nascimento)) +
+				fato('Estado civil', escaparHTML(v.estadoCivil)) +
+				fato('Telefone', '<a href="tel:' + escaparHTML(v.telefone.replace(/\D/g, '')) + '">' + escaparHTML(v.telefone) + '</a>') +
+				fato('Contato', contato(v.email)) +
+				'</dl>';
+
+			// Inclui projetos em coautoria ("FULANO E CICLANO")
+			var projetos = dados[1].filter(function (p) {
+				return normalizar(p.autor).indexOf(normalizar(v.nome)) !== -1;
+			});
+			document.getElementById('total-projetos').textContent = projetos.length + (projetos.length === 1 ? ' projeto' : ' projetos');
+			document.getElementById('listaProjetos').innerHTML = listaProjetos(projetos, true);
+		}).catch(function (erro) {
+			mostrarErro(document.getElementById('perfil'), erro);
+		});
+	</script>
+</body>
 </html>
