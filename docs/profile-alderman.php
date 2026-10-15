@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="shortcut icon" type="image/x-png" href="./imgs/icon.png"/>
+		<link rel="shortcut icon" type="image/x-png" href="./imgs/Icon.png"/>
 		<link rel="stylesheet" type="text/css" href="./css/index.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
 		<title> MONITORAÊ </title>

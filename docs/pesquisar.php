@@ -32,7 +32,7 @@ $resultado_total = mysqli_num_rows($consulta_result);
 
 <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" type="image/x-png" href="./imgs/icon.png" />
+    <link rel="shortcut icon" type="image/x-png" href="./imgs/Icon.png" />
     <link rel="stylesheet" type="text/css" href="./css/index.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title> MONITORAÊ </title>

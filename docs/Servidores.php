@@ -7,7 +7,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<link rel="shortcut icon" type="image/x-png" href="./imgs/icon.png"/>
+	<link rel="shortcut icon" type="image/x-png" href="./imgs/Icon.png"/>
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
 	<title> MONITORAÊ </title>
 	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>

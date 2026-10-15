@@ -146,7 +146,7 @@ Projeto-de-Engenharia-de-Software-2---ES2/
 │   ├── requisitos.docx                 # Especificação de Requisitos de Software (SRS)
 │   └── stakeholders.docx               # Análise e mapeamento das partes interessadas
 │
-├── 📂 Site-MONITORAE/                # Código-fonte da aplicação web
+├── 📂 docs/                # Código-fonte da aplicação web
 │   ├── 📂 BancoDeDados/                # Scripts SQL de criação de tabelas e esquemas relacionais
 │   ├── 📂 CrawlerServidores/           # Scripts de extração dos dados da folha de pagamento
 │   ├── 📂 CrawlerVereadores/           # Scripts de extração dos dados da Câmara Municipal
@@ -205,22 +205,22 @@ Projeto-de-Engenharia-de-Software-2---ES2/
 3. **Configurar o Banco de Dados:**
    - Inicie os serviços do **Apache** e **MySQL** no painel de controle do seu servidor local.
    - Acesse `http://localhost/phpmyadmin` no seu navegador e crie uma nova base de dados.
-   - Importe os arquivos `.sql` disponíveis no diretório `Site-MONITORAE/BancoDeDados/`.
-   - Ajuste as credenciais de acesso ao banco (host, usuário, senha, nome da base) em `Site-MONITORAE/conexao.php`.
+   - Importe os arquivos `.sql` disponíveis no diretório `docs/BancoDeDados/`.
+   - Ajuste as credenciais de acesso ao banco (host, usuário, senha, nome da base) em `docs/conexao.php`.
 
 4. **Instalar Dependências:**
    ```bash
-   cd Site-MONITORAE
+   cd docs
    composer install
    ```
 
 5. **Executar a Coleta de Dados:**
-   - Execute os scripts de raspagem em `Site-MONITORAE/CrawlerServidores/` e `Site-MONITORAE/CrawlerVereadores/` para popular as tabelas do banco de dados com os registros atualizados.
+   - Execute os scripts de raspagem em `docs/CrawlerServidores/` e `docs/CrawlerVereadores/` para popular as tabelas do banco de dados com os registros atualizados.
 
 6. **Acessar a Aplicação:**
    - Abra o navegador e acesse:
    ```text
-   http://localhost/Projeto-de-Engenharia-de-Software-2---ES2/Site-MONITORAE/index.php
+   http://localhost/Projeto-de-Engenharia-de-Software-2---ES2/docs/index.php
    ```
 
 ---
