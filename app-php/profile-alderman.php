@@ -1,210 +1,103 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<link rel="shortcut icon" type="image/x-png" href="imgs/Icon.png"/>
-		<link rel="stylesheet" type="text/css" href="css/index.css">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
-		<title> MONITORAÊ </title>
-	</head>
-	<body>	
-		<div class="header-2">
-			 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-			 <a href="index.php"> <img src="imgs/logo.png" ></a>
-			 <div class="menu">
-				<ul>
-					<li>
-						<a href="PerfilPrefeito.php">Prefeito</a>
-					</li>
-					<li>
-						<a href="profile-alderman.php?id=1&nome=ANTONIO LINO DA SILVA">Vereadores</a>
-					</li>
-					<li>
-						<a href="Servidores.php">Servidores</a>
-					</li>
-					<li>
-						<a href="index.php#session2">Notícias</a>
-					</li>
-					<li>
-						<a href="index.php#session3">Dashboard</a>
-					</li>
-					<li>
-						<a href="index.php#bg">Relatórios</a>
-					</li>
-				</ul>
-			 </div>
-			 <div class="busca">
-					<input type="text" placeholder="O que você procura?                        " value="" tabindex="1" autocomplete="off">
-			 </div>
-		</div>
-		<div class="lista">
-			<div class="mensagem1">
-				Outros vereadores
-				<div class="busca2">
-					<input class="perfil" type="text" placeholder="    Pesquise por um vereador" value="" tabindex="1" autocomplete="off" id="campodepesquisaveredor">
+<?php
+require_once __DIR__ . '/inc/funcoes.php';
+$conn = conexaoOuErro();
+
+$vereadores = $conn->query('SELECT * FROM tb_vereadores ORDER BY codigo')->fetchAll();
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 1;
+
+// Consulta preparada: o id vem da URL e não entra direto no SQL
+$stmt = $conn->prepare('SELECT * FROM tb_vereadores WHERE codigo = ?');
+$stmt->execute([$id]);
+$v = $stmt->fetch() ?: $vereadores[0];
+$id = (int) $v['codigo'];
+
+// Inclui projetos em coautoria ("FULANO E CICLANO")
+$stmt = $conn->prepare('SELECT NUMERO, AUTOR, ASSUNTO, ANOTACAO FROM tb_projetoslei WHERE AUTOR LIKE ? ORDER BY codigo');
+$stmt->execute(['%' . limpar($v['NOME']) . '%']);
+$projetos = $stmt->fetchAll();
+
+// Alguns vereadores têm site no lugar do e-mail
+function contato($texto) {
+	$t = limpar($texto);
+	if ($t === '') return 'Não informado';
+	if (strpos($t, '@') !== false) return '<a href="mailto:' . e($t) . '">' . e($t) . '</a>';
+	$url = preg_match('#^https?://#', $t) ? $t : 'http://' . $t;
+	return '<a href="' . e($url) . '" target="_blank" rel="noopener">' . e(rtrim(preg_replace('#^https?://#', '', $t), '/')) . '</a>';
+}
+
+function fato($rotulo, $valorHTML, $destaque = false) {
+	return '<div class="fato' . ($destaque ? ' fato--destaque' : '') . '"><dt>' . $rotulo . '</dt><dd>' . $valorHTML . '</dd></div>';
+}
+
+$nome = nomeProprio($v['NOME']);
+$votos = limpar($v['VOTOS']);
+topo($nome . ' · Vereadores · MONITORAÊ', 'Perfil dos vereadores de Mogi das Cruzes: dados pessoais, votos, salário e projetos de lei.');
+?>
+	<main id="conteudo">
+		<?php topoPagina('Vereadores', 'Vereadores', 'Conheça cada vereador da Câmara Municipal de Mogi das Cruzes: formação, votos recebidos, salário e os projetos de lei que apresentou.'); ?>
+
+		<div class="container conteudo-sobreposto">
+			<div class="perfil">
+				<aside class="cartao perfil-lateral" aria-label="Lista de vereadores">
+					<label class="lista-busca">
+						<span data-icone="lupa"></span>
+						<span class="visualmente-oculto">Pesquisar vereador por nome ou partido</span>
+						<input type="search" id="campodepesquisaveredor" placeholder="Nome ou partido" autocomplete="off">
+					</label>
+					<ul class="lista-vereadores" id="lista-vereadores">
+						<?php foreach ($vereadores as $item) echo itemVereador($item, $id); ?>
+					</ul>
+				</aside>
+
+				<div>
+					<article class="cartao">
+						<div class="perfil-cabecalho">
+							<img class="avatar" src="<?= e(fotoVereador($v['imagem'])) ?>" alt="Foto de <?= e($nome) ?>">
+							<div>
+								<span class="etiqueta"><?= e(limpar($v['Partido'])) ?> · <?= e(limpar($v['LEGISLATURA'])) ?></span>
+								<h2><?= e($nome) ?></h2>
+								<p><?= e(limpar($v['ATIVIDADE']) ? nomeProprio($v['ATIVIDADE']) : 'Vereador(a)') ?> · <?= e($votos) ?></p>
+							</div>
+						</div>
+						<dl class="fatos">
+							<?= fato('Salário líquido', limpar($v['SALARIO']) ? 'R$ ' . e(limpar($v['SALARIO'])) : 'Não informado', true) ?>
+							<?= fato('Votos', e(preg_replace('/ votos$/i', '', $votos))) ?>
+							<?= fato('Formação', e(nomeProprio($v['FORMACAO']) ?: 'Não informada')) ?>
+							<?= fato('Nascimento', e(limpar($v['DATANASCIMENTO']))) ?>
+							<?= fato('Estado civil', e(limpar($v['ESTADOCIVIL']))) ?>
+							<?= fato('Telefone', '<a href="tel:' . e(preg_replace('/\D/', '', $v['TELEFONE'])) . '">' . e(limpar($v['TELEFONE'])) . '</a>') ?>
+							<?= fato('Contato', contato($v['EMAIL'])) ?>
+						</dl>
+					</article>
+
+					<div class="cartao bloco">
+						<h3 class="bloco-titulo"><span data-icone="documento"></span> Projetos de lei <span class="etiqueta"><?= count($projetos) . (count($projetos) === 1 ? ' projeto' : ' projetos') ?></span></h3>
+						<?= listaProjetos($projetos, true) ?>
+					</div>
 				</div>
-
-				<script>
-					$('#campodepesquisaveredor').keyup(function() {
-						var campo = document.querySelector("#campodepesquisaveredor").value;
-					 	pesquisa(campo);
-					});
-
-					function pesquisa(nome){
-						$.ajax({
-						  type: 'post',
-						  url: 'pesquisa.php',
-						  data: {nome: nome},
-						  success: function(data){
-                        	$(".quadro").html(data);
-                    	  }
-						});
-					}
-				</script>
-
-				<!-- <script>
-					function pesquisa(nome){
-						$.ajax({
-						  type: 'post',
-						  url: 'pesquisa.php',
-						  data: {nome: nome}
-						});
-
-				        $.post(url, function(result) {
-				        	alert(result);
-				        });
-					}
-				</script> -->
-
-				<div class="quadro" style="height: 500px;overflow-y: auto;">
-					<?php 
-						include './conexao.php';
-					    $conn = getConnection();
-
-					    $sql = "SELECT * FROM tb_vereadores";
-					    $stmt = $conn->prepare($sql);
-					    $stmt->execute();
-					    $result = $stmt->fetchAll();
-
-					    foreach ($result as $newresult) {
-					    	echo "<br>";
-					        echo "<div style='display:flex;align-items:center;'><img src='../docs/".trim($newresult['imagem'])."' style='width:64px;height:64px;border-radius:100%;margin-right:10px;border:3px solid #ffb230;'><div style='width:100%;'><a href='profile-alderman.php?id=".$newresult['codigo']."&nome=".$newresult['NOME']."' style='color:#111;text-decoration:none;font-size:14px;text-align:center;'>".$newresult['NOME']."</a></div></div><br>";
-					    } 
-					?>
-				</div>
-				
 			</div>
 		</div>
-		<div class="visao">
-			<?php 
-				// include './conexao.php';
-			    // $conn = getConnection();
-				$id = $_GET['id'];
+	</main>
+<?php rodape('vereadores'); ?>
+	<script>
+		document.querySelectorAll('[data-icone]').forEach(function (el) { el.outerHTML = icone(el.dataset.icone); });
 
-			    $sql = "SELECT * FROM tb_vereadores WHERE codigo='$id'";
-			    $stmt = $conn->prepare($sql);
-			    $stmt->execute();
-			    $result = $stmt->fetch();
+		var atual = document.querySelector('.lista-vereadores [aria-current]');
+		if (atual) atual.scrollIntoView({ block: 'nearest' });
 
-				echo "
-				<div class='foto'>
-					<img src='../docs/".trim($result['imagem'])."' style='width:200px;height:200px;border-radius:100%;border:3px solid #ffb230;'>
-				</div>
-				";
-
-				echo "
-				<div class='nome'>
-					<p style='font-size:18px;color:#111;'>".$result['NOME']."</p>
-				</div>
-				";
-			?>
-
-
-			<div class="dadosPessoais">
-				DADOS PESSOAIS
-			</div>
-			<!-- <div class="plenario">
-				ATUAÇÃO NO PLENÁRIO E COMISSÕES
-			</div> -->
-			<div class="deshboardPerfil">
-				DESHBOARD
-			</div>
-			<div class="projetos">
-				PROJETOS
-			</div>
-			<div class="comentarios">
-				COMENTÁRIOS
-			</div>
-		</div>
-		<div class="dadosv">
-			<?php 
-				// include './conexao.php';
-			    // $conn = getConnection();
-				$id = $_GET['id'];
-
-			    $sql = "SELECT * FROM tb_vereadores WHERE codigo='$id'";
-			    $stmt = $conn->prepare($sql);
-			    $stmt->execute();
-			    $result = $stmt->fetchAll();
-
-
-				echo '
-				<div class="bloco1" id="bloco1">
-					<img src="imgs/user.png" height="15%" width="3.5%"> DADOS PESSOAIS 
-				';
-
-				foreach ($result as $newresult) {
-					echo "<br>";
-					echo "<p> <div class='toticias'> ATIVIDADE <br> </div> <div class='corponoticia'>".$newresult['ATIVIDADE']."</div> </p><br>";
-					echo "<p> <div class='toticias'> FORMAÇÃO <br> </div> <div class='corponoticia'>".$newresult['FORMACAO']."</div></p><br>";
-					echo "<p> <div class='toticias'>  DATA DE NASCIMENTO <br> </div> <div class='corponoticia'>".$newresult['DATANASCIMENTO']."</div></p><br>";
-					echo "<p> <div class='toticias'>  ESTADO CIVIL <br> </div> <div class='corponoticia'>".$newresult['ESTADOCIVIL']."</div></p><br>";
-					echo "<p> <div class='toticias'> QUANTIDADE DE VOTOS <br> </div> <div class='corponoticia'>".$newresult['VOTOS']."</div></p><br>";
-					echo "<p> <div class='toticias'> LEGISLATURA <br> </div> <div class='corponoticia'>".$newresult['LEGISLATURA']."</div></p><br>";
-					echo "<p> <div class='toticias'> TELEFONE <br> </div> <div class='corponoticia'>".$newresult['TELEFONE']."</div></p><br>";
-					echo "<p> <div class='toticias'>  EMAIL <br> </div> <div class='corponoticia'>".$newresult['EMAIL']."</div></p><br>";
-					echo "<p> <div class='toticias'>  PARTIDO <br> </div> <div class='corponoticia'>".$newresult['Partido']."</div></p><br>";
-					echo "<p> <div class='toticias'>  SALÁRIO LÍQUIDO <br> </div> <div class='corponoticia'> R$ ".$newresult['SALARIO']."</div></p><br>";
-				}
-				echo'
-				</div>
-				';
-			?>
-			
-			<!-- <div class="bloco2" id="bloco2">
-				<img src="imgs/calendar.png" height="15%" width="3.5%">  ATUAÇÃO NO PLENÁRIO E COMISSÕES 
-			</div> -->
-			<?php 
-				// include './conexao.php';
-			    // $conn = getConnection();
-				$nome = $_GET['nome'];
-
-			    $sql = "SELECT * FROM tb_projetoslei WHERE AUTOR='$nome'";
-			    $stmt = $conn->prepare($sql);
-			    $stmt->execute();
-			    $result = $stmt->fetchAll();
-
-
-				echo '
-				<div class="bloco4" id="bloco4">
-					<img src="imgs/project.png" height="15%" width="3.5%">  PROJETOS 
-				';
-
-				foreach ($result as $newresult) {
-					echo "<br>";
-					echo "<p> <div class='toticias'> NÚMERO DO PROJETO <br> </div> <div class='corponoticia'>".$newresult['NUMERO']."</div></p><br>";
-					echo "<p> <div class='corponoticia'> ASSUNTO: ".$newresult['ASSUNTO']."</div></p><br>";
-					echo "<p> <div class='corponoticia'> ANOTAÇÃO: ".$newresult['ANOTACAO']."</div></p><br>";
-				}
-
-				echo'
-				</div>
-				';
-			?>
-			
-			<div class="bloco5" id="bloco5">
-				<img src="imgs/comment.png" height="15%" width="3.5%">  COMENTÁRIOS 
-			</div>
-		</div>
-	</body>
+		// Busca no banco a cada letra digitada (pesquisa.php devolve os itens da lista)
+		var lista = document.getElementById('lista-vereadores');
+		var pedido = 0;
+		document.getElementById('campodepesquisaveredor').addEventListener('input', function () {
+			var meuPedido = ++pedido;
+			fetch('pesquisa.php', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: 'id=<?= $id ?>&nome=' + encodeURIComponent(this.value.trim())
+			}).then(function (r) { return r.text(); }).then(function (html) {
+				if (meuPedido === pedido) lista.innerHTML = html; // ignora respostas antigas
+			});
+		});
+	</script>
+</body>
 </html>

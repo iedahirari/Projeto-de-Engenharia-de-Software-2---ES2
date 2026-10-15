@@ -1,15 +1,20 @@
 <?php
+// Busca de vereadores por nome ou partido, chamada por AJAX em profile-alderman.php.
+// Devolve os itens <li> da lista lateral.
+require_once __DIR__ . '/inc/funcoes.php';
+$conn = conexaoOuErro();
 
+$nome = limpar($_POST['nome'] ?? '');
+$idAtual = (int) ($_POST['id'] ?? 0);
 
-	include './conexao.php';
-    $conn = getConnection();
-	$nome = $_POST['nome'];
+// Consulta preparada: o texto digitado não entra direto no SQL (evita SQL injection)
+$stmt = $conn->prepare('SELECT * FROM tb_vereadores WHERE NOME LIKE ? OR Partido LIKE ? ORDER BY codigo');
+$stmt->execute(['%' . $nome . '%', $nome . '%']);
+$resultado = $stmt->fetchAll();
 
-    $sql = "SELECT * FROM tb_vereadores WHERE NOME like '%$nome%' OR Partido = '$nome'";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-
-	foreach ($result as $newresult) {
-		 echo "<div style='display:flex;align-items:center;'><img src='../docs/".trim($newresult['imagem'])."' style='width:64px;height:64px;border-radius:100%;margin-right:10px;border:3px solid #ffb230;'><div style='width:100%;'><a href='profile-alderman.php?id=".$newresult['codigo']."&nome=".$newresult['NOME']."' style='color:#111;text-decoration:none;font-size:14px;text-align:center;'>".$newresult['NOME']."</a></div></div><br>";
-	}
+if (!$resultado) {
+	echo '<li class="vazio">Nenhum vereador encontrado.</li>';
+}
+foreach ($resultado as $v) {
+	echo itemVereador($v, $idAtual);
+}

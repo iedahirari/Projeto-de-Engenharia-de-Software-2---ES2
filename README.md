@@ -211,10 +211,9 @@ Projeto-de-Engenharia-de-Software-2---ES2/
 │   ├── correcoes.sql                     # Correções de tipos de colunas e caminhos das fotos
 │   └── bdmonitorae.sql                   # Versão anterior do banco (tb_funcionario)
 │
-├── 📂 app-php/                         # 🐘 Versão original do site em PHP + MySQL (roda no XAMPP)
-│   ├── *.php                             # Páginas e consultas ao banco
-│   ├── 📂 css/                           # Estilo da versão original
-│   └── 📂 imgs/                          # Ícones e logo da versão original
+├── 📂 app-php/                         # 🐘 Versão acadêmica em PHP + MySQL (roda no XAMPP)
+│   ├── *.php                             # Páginas que consultam o banco (mesmo visual do site)
+│   └── 📂 inc/                           # Layout e funções compartilhadas (conexão, escape, listas)
 │
 ├── 📂 ferramentas/                     # 🔧 Scripts auxiliares
 │   └── sql_para_json.py                  # Exporta vereadores e projetos do .sql para docs/data/
@@ -299,7 +298,8 @@ O primeiro precisa do Node.js 18+, e o segundo, do PHP 7.4+ (o XAMPP já vem com
 
 1. Copie o repositório para `C:/xampp/htdocs/` e inicie o **Apache** e o **MySQL**.
 2. No `http://localhost/phpmyadmin`, crie o banco `bdservidores`, importe `banco/bdservidores.sql` e depois rode `banco/correcoes.sql`.
-3. Se o seu MySQL tiver senha, ajuste `app-php/conexao.php` e `app-php/conexao2.php`.
+   Para trazer os servidores atualizados para o banco, rode `php crawler/servidores/crawler_servidores.php --banco` (veja [`crawler/README.md`](crawler/README.md)).
+3. Se o seu MySQL tiver senha, ajuste `app-php/conexao.php`.
 4. Acesse:
    ```text
    http://localhost/Projeto-de-Engenharia-de-Software-2---ES2/app-php/index.php

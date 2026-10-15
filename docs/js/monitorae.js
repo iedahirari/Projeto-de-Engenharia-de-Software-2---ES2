@@ -31,6 +31,9 @@ var LOGO_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true">' +
 	'</svg>';
 
 // Layout (cabeçalho e rodapé iguais em todas as páginas) ---------------------
+// A versão PHP (app-php/) reaproveita este arquivo e troca os links e a pasta
+// dos dados definindo window.MONITORAE = { links: {...}, dados: '...' } antes.
+var CONFIG = window.MONITORAE || {};
 var PAGINAS = [
 	{ id: 'inicio', titulo: 'Início', href: 'index.html' },
 	{ id: 'prefeito', titulo: 'Prefeito', href: 'PerfilPrefeito.html' },
@@ -38,10 +41,13 @@ var PAGINAS = [
 	{ id: 'servidores', titulo: 'Servidores', href: 'Servidores.html' },
 	{ id: 'relatorios', titulo: 'Relatórios', href: 'Relatorios.html' },
 	{ id: 'noticias', titulo: 'Notícias', href: 'index.html#noticias' }
-];
+].map(function (p) {
+	if (CONFIG.links && CONFIG.links[p.id]) p.href = CONFIG.links[p.id];
+	return p;
+});
 
 function marcaHTML() {
-	return '<a class="marca" href="index.html" aria-label="MONITORAÊ, página inicial">' + LOGO_SVG +
+	return '<a class="marca" href="' + PAGINAS[0].href + '" aria-label="MONITORAÊ, página inicial">' + LOGO_SVG +
 		'<span class="marca-nome">MONITORAÊ<small>Mogi das Cruzes</small></span></a>';
 }
 
@@ -99,7 +105,7 @@ function montarLayout(paginaAtual) {
 
 // Dados ----------------------------------------------------------------------
 function carregarJSON(nome) {
-	return fetch('data/' + nome + '.json').then(function (resposta) {
+	return fetch((CONFIG.dados || 'data/') + nome + '.json').then(function (resposta) {
 		if (!resposta.ok) throw new Error('Não foi possível carregar ' + nome + '.json');
 		return resposta.json();
 	});

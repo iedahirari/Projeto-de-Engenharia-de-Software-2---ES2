@@ -1,115 +1,53 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<link rel="shortcut icon" type="image/x-png" href="imgs/Icon.png"/>
-		<link rel="stylesheet" type="text/css" href="css/index.css">
-		<title> MONITORAÊ </title>
-		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-		<script>
-			jQuery(document).ready(function($){
-				$(".scroll").click(function(event){
-					event.preventDefault();
-					$("html,body").animate({scrollTop:$(this.hash).offset().top},800);
-				});
-			});
-		</script>
-	</head>
-	<body>	
-		<div class="header-2">
-			 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-			 <a href="index.php"> <img src="imgs/logo.png" ></a>
-			 <div class="menu">
-				<ul>
-					<li>
-						<a href="PerfilPrefeito.php">Prefeito</a>
-					</li>
-					<li>
-						<a href="profile-alderman.php?id=1&nome=ANTONIO LINO DA SILVA">Vereadores</a>
-					</li>
-					<li>
-						<a href="Servidores.php">Servidores</a>
-					</li>
-					<li>
-						<a href="index.php#session2">Notícias</a>
-					</li>
-					<li>
-						<a href="index.php#session3">Dashboard</a>
-					</li>
-					<li>
-						<a href="index.php#bg">Relatórios</a>
-					</li>
-				</ul>
-			 </div>
-			 <div class="busca">
-					<input type="text" placeholder="O que você procura?                        " value="" tabindex="1" autocomplete="off">
-			 </div>
-		</div>
-		<div class="dadosPrefeito">
-			<div class="foto">
-				<img src="../docs/imgs/prefeito.jpg" height="100%" width="70%" id="perfilfoto" style="border:3px solid #ffb230;border-radius: 100%;"> 
-			</div>
-			<br>
-			<div class="nome">
-				MARCUS MELO
-			</div>
-			<div class="dadosPessoais">
-				 DADOS  PESSOAIS 
-			</div>
-			<div class="plenario">
-				 ATUAÇÃO NO PLENÁRIO E COMISSÕES 
-			</div>
-			<div class="deshboardPerfil">
-				 DESHBOARD 
-			</div>
-			<div class="projetos">
-				PROJETOS 
-			</div>
-			<div class="comentarios">
-				 COMENTÁRIOS
-			</div>
-			<div class="titulo" style="background-color:#fff;z-index: 999;">
-				PREFEITO(A) DE MOGI DAS CRUZES
-			</div>
-		</div>
-		<div class="dados" style="z-index: -1;">
-			<div class="bloco1" id="bloco1">
-				<img src="imgs/user.png" height="15%" width="2%"> DADOS PESSOAIS 
-				<div class="descricao">
-					<br>
-				 	 Marcus Melo nasceu em Mogi das Cruzes, tem 47 anos, é formado em Direito pela Universidade de Mogi das Cruzes, pós-graduado em Administração Estratégica pela Universidade Braz Cubas e possui MBA pela Fundação Getúlio Vargas. Antes de ingressar na Administração Pública, Marcus Melo construiu uma carreira sólida na iniciativa privada. É proprietário e administrador de uma das maiores e mais tradicionais escolas de Mogi das Cruzes. Em 2000, iniciou uma forte ligação com a Associação Comercial da cidade. Foi coordenador do Núcleo de Jovens Empreendedores e em 2008 chegou à vicepresidência da instituição. Durante todo o período esteve à frente de várias campanhas em defesa do setor e em 2009 foi eleito presidente da Associação Comercial de Mogi das Cruzes e vice-presidente da Facesp – Federação das Associações Comerciais do Estado de São Paulo. Ainda em 2009, Marcus Melo iniciou sua carreira na Administração Pública, como secretário-adjunto de Gabinete da Prefeitura de Mogi das Cruzes. Em 2011 assumiu a direção geral do Serviço Municipal de Águas e Esgotos, autarquia responsável pelo saneamento básico do município. Deixou o cargo em 2016 para disputar seu primeiro cargo eletivo, sendo eleito prefeito de Mogi das Cruzes em primeiro turno, com 129.763 votos, correspondentes a 64,34% dos votos válidos.
-				 	 <br>
-				 	 <br> Email:  gabinete@pmmc.com.br
-				 	 <br> Telefone: 4798-5028
-				 	 <br> Nascimento: 1 de setembro de 1972 (47 anos)
-					 <br>Nacionalidade:	brasileiro
-					 <br> Partido: PSDB
-					 <br> Ocupação: Empresário
-					 <br> Salário: 	R$ 27.520,30
-				 </div>
+<?php
+require_once __DIR__ . '/inc/funcoes.php';
+$conn = conexaoOuErro();
+
+$stmt = $conn->prepare('SELECT NUMERO, AUTOR, ASSUNTO, ANOTACAO FROM tb_projetoslei WHERE AUTOR = ? ORDER BY codigo');
+$stmt->execute(['PREFEITO']);
+$projetos = $stmt->fetchAll();
+
+topo('Prefeito · MONITORAÊ', 'Perfil do prefeito de Mogi das Cruzes: dados, salário e projetos de lei enviados à Câmara.');
+?>
+	<main id="conteudo">
+		<?php topoPagina('Prefeito', 'Prefeito de Mogi das Cruzes', 'Quem comanda o Poder Executivo da cidade, quanto recebe e quais projetos de lei enviou à Câmara Municipal.'); ?>
+
+		<div class="container conteudo-sobreposto">
+			<div class="cartao">
+				<div class="perfil-cabecalho">
+					<img class="avatar" src="<?= RAIZ_SITE ?>imgs/prefeito.jpg" alt="Foto de Marcus Melo">
+					<div>
+						<span class="etiqueta">Prefeito · Gestão 2017–2020</span>
+						<h2>Marcus Melo</h2>
+						<p>PSDB · eleito em 1º turno com 129.763 votos (64,34% dos votos válidos)</p>
+					</div>
+				</div>
+
+				<dl class="fatos">
+					<div class="fato fato--destaque"><dt>Salário</dt><dd>R$ 27.520,30</dd></div>
+					<div class="fato"><dt>Partido</dt><dd>PSDB</dd></div>
+					<div class="fato"><dt>Nascimento</dt><dd>1º de setembro de 1972</dd></div>
+					<div class="fato"><dt>Ocupação</dt><dd>Empresário</dd></div>
+					<div class="fato"><dt>Telefone</dt><dd><a href="tel:+551147985028">(11) 4798-5028</a></dd></div>
+					<div class="fato"><dt>E-mail</dt><dd><a href="mailto:gabinete@pmmc.com.br">gabinete@pmmc.com.br</a></dd></div>
+				</dl>
 			</div>
 
-			<?php 
-				include './conexao.php';
-			    $conn = getConnection();
+			<div class="cartao bloco">
+				<h3 class="bloco-titulo"><span data-icone="usuario"></span> Trajetória</h3>
+				<p>Marcus Melo nasceu em Mogi das Cruzes, é formado em Direito pela Universidade de Mogi das Cruzes, pós-graduado em Administração Estratégica pela Universidade Braz Cubas e tem MBA pela Fundação Getúlio Vargas.</p>
+				<p>Antes da vida pública, construiu carreira na iniciativa privada como proprietário e administrador de uma das escolas mais tradicionais da cidade. A partir de 2000 atuou na Associação Comercial, onde coordenou o Núcleo de Jovens Empreendedores, chegou à vice-presidência em 2008 e foi eleito presidente em 2009, além de vice-presidente da Facesp (Federação das Associações Comerciais do Estado de São Paulo).</p>
+				<p>Em 2009 entrou na Administração Pública como secretário-adjunto de Gabinete da Prefeitura. Em 2011 assumiu a direção geral do Semae, a autarquia de saneamento básico do município, e deixou o cargo em 2016 para disputar sua primeira eleição.</p>
+			</div>
 
-			    $sql = "SELECT * FROM tb_projetoslei WHERE AUTOR='PREFEITO'";
-			    $stmt = $conn->prepare($sql);
-			    $stmt->execute();
-			    $result = $stmt->fetchAll();
-			    echo '<div class="bloco4" id="bloco4">';
-			    echo '<img src="imgs/project.png" height="15%" width="2%">  PROJETOS <br>';
-			    foreach ($result as $newresult) {
-			    	echo"<div class='toticias'> NÚMERO DO PROJETO <br> </div> <div class='corponoticia'>".$newresult['NUMERO']."</div><br>";
-			    	echo" <div class='corponoticia'> ASSUNTO:".$newresult['ASSUNTO']."</div><br>";
-			    	echo" <div class='corponoticia'> ANOTAÇÃO:".$newresult['ANOTACAO']."</div><br>";
-			   	}
-			    echo '</div>';
-			?>
-			
-			<div class="bloco5" id="bloco5">
-				<img src="imgs/comment.png" height="15%" width="2%">  COMENTÁRIOS 
+			<div class="cartao bloco">
+				<h3 class="bloco-titulo"><span data-icone="documento"></span> Projetos de lei enviados à Câmara <span class="etiqueta"><?= count($projetos) ?> projetos</span></h3>
+				<?= listaProjetos($projetos) ?>
 			</div>
 		</div>
-	</body>
+	</main>
+<?php rodape('prefeito'); ?>
+	<script>
+		document.querySelectorAll('[data-icone]').forEach(function (el) { el.outerHTML = icone(el.dataset.icone); });
+	</script>
+</body>
 </html>

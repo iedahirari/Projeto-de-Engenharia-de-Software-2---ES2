@@ -1,125 +1,133 @@
 <?php
-	include("conexao2.php");
+require_once __DIR__ . '/inc/funcoes.php';
+$conn = conexaoOuErro();
 
-	$consulta = "SELECT * from tb_servidores";
-	$con = $mysqli->query($consulta) or die($mysqli->error);	
+// Parâmetros da URL (busca, ordenação e paginação são feitas pelo MySQL)
+$busca = limpar($_GET['busca'] ?? '');
+$colunas = ['rgf' => 'rgf', 'nome' => 'nome', 'cargo' => 'cargo', 'rendimentos' => 'rendimentos'];
+$ordem = isset($colunas[$_GET['ordem'] ?? '']) ? $_GET['ordem'] : 'nome';
+$direcao = ($_GET['dir'] ?? '') === 'desc' ? 'desc' : 'asc';
+$porPagina = (int) ($_GET['por'] ?? 25);
+if (!in_array($porPagina, [25, 50, 100], true)) $porPagina = 25;
+$pagina = max(1, (int) ($_GET['pagina'] ?? 1));
+
+$filtro = '';
+$parametros = [];
+if ($busca !== '') {
+	$filtro = 'WHERE nome LIKE ? OR cargo LIKE ? OR rgf LIKE ?';
+	$parametros = ['%' . $busca . '%', '%' . $busca . '%', $busca . '%'];
+}
+
+$total = (int) $conn->query('SELECT COUNT(*) FROM tb_servidores')->fetchColumn();
+$stmt = $conn->prepare("SELECT COUNT(*) FROM tb_servidores $filtro");
+$stmt->execute($parametros);
+$encontrados = (int) $stmt->fetchColumn();
+
+$paginas = max(1, (int) ceil($encontrados / $porPagina));
+$pagina = min($pagina, $paginas);
+$inicio = ($pagina - 1) * $porPagina;
+
+// Coluna e direção vêm de uma lista fixa, então podem entrar no SQL com segurança
+$stmt = $conn->prepare("SELECT rgf, nome, cargo, rendimentos FROM tb_servidores $filtro
+	ORDER BY {$colunas[$ordem]} $direcao, nome LIMIT $inicio, $porPagina");
+$stmt->execute($parametros);
+$servidores = $stmt->fetchAll();
+
+function url($mudancas) {
+	global $busca, $ordem, $direcao, $porPagina, $pagina;
+	$atual = ['busca' => $busca, 'ordem' => $ordem, 'dir' => $direcao, 'por' => $porPagina, 'pagina' => $pagina];
+	return 'Servidores.php?' . http_build_query(array_filter(array_merge($atual, $mudancas), function ($v) { return $v !== '' && $v !== null; }));
+}
+
+function cabecalhoColuna($coluna, $rotulo, $classe = '') {
+	global $ordem, $direcao;
+	$ativa = $ordem === $coluna;
+	$nova = $ativa ? ($direcao === 'asc' ? 'desc' : 'asc') : ($coluna === 'rendimentos' ? 'desc' : 'asc');
+	return '<th scope="col"' . ($classe ? ' class="' . $classe . '"' : '')
+		. ($ativa ? ' aria-sort="' . ($direcao === 'asc' ? 'ascending' : 'descending') . '"' : '')
+		. '><a href="' . e(url(['ordem' => $coluna, 'dir' => $nova, 'pagina' => 1])) . '">' . $rotulo . '</a></th>';
+}
+
+// Destaca o termo buscado (sem diferenciar maiúsculas)
+function destacar($texto) {
+	global $busca;
+	$texto = limpar($texto);
+	$posicao = $busca === '' ? false : mb_stripos($texto, $busca, 0, 'UTF-8');
+	if ($posicao === false) return e($texto);
+	$tamanho = mb_strlen($busca, 'UTF-8');
+	return e(mb_substr($texto, 0, $posicao, 'UTF-8')) . '<mark>' . e(mb_substr($texto, $posicao, $tamanho, 'UTF-8')) . '</mark>'
+		. e(mb_substr($texto, $posicao + $tamanho, null, 'UTF-8'));
+}
+
+topo('Servidores · MONITORAÊ', 'Consulte nome, cargo e salário dos servidores públicos de Mogi das Cruzes.');
 ?>
-<html>
-<head>
-	<meta charset="utf-8">
-	<link rel="shortcut icon" type="image/x-png" href="imgs/Icon.png"/>
-	<link rel="stylesheet" type="text/css" href="css/index.css">
-	<title> MONITORAÊ </title>
-	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-	<script>
-		jQuery(document).ready(function($){
-			$(".scroll").click(function(event){
-				event.preventDefault();
-				$("html,body").animate({scrollTop:$(this.hash).offset().top},800);
-			});
-		});
-	</script>
-	 <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
-</head>
-<body>	
-		<div class="header-2">
-		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-		 <a href="index.php"> <img src="imgs/logo.png" ></a>
-		 <div class="menu">
-			<ul>
-				<li>
-					<a href="PerfilPrefeito.php">Prefeito</a>
-				</li>
-				<li>
-					<a href="PerfilVereador.php">Vereadores</a>
-				</li>
-				<li>
-					<a href="Servidores.php">Servidores</a>
-				</li>
-				<li>
-					<a  class="scroll" href="#session2">Notícias</a>
-				</li>
-				<li>
-					<a class="scroll" href="#session3">Dashboard</a>
-				</li>
-				<li>
-					<a href="#bg"> Relatórios</a>
-				</li>
-			</ul>
-		 </div>
-		 <div class="busca">
-				<input id="home" type="text" placeholder="O que você procura?                        " value="" tabindex="1" autocomplete="off">
-		 </div>
-		</div> 
-		<p> <p> <p> <p> <p> <p>
-		<div class="tituloRel"> SERVIDORES PÚBLICOS E ESTAGIÁRIOS </div>
-		<p> Gastos com servidores públicos e estagiários, dentro dos limites estabelecidos pela Lei de Responsabilidade Fiscal, podem ser verificados e acompanhados periodicamente.</p>
-			
-			<table id="minhaTabela">
-				<style >
-					table{ 
-						border-bottom-color: orange;
-						display: flex;
-						justify-content: center;
-						align-items: center; 
-						font-family: "Trebuchet MS", arial;
+	<main id="conteudo">
+		<?php topoPagina('Servidores', 'Servidores públicos e estagiários', 'Gastos com servidores, dentro dos limites da Lei de Responsabilidade Fiscal, podem ser verificados e acompanhados por qualquer cidadão.'); ?>
 
-					}
-					th{
-						height: 20px;
-						width: 20%;
-						display: flex;
-						justify-content: space-around;
-						align-items: center;
-						font-weight: bold;
-						color: #03bb85;
-					}
-					tr{
-						border-bottom: 1px solid #111;
-						border-color: orange;
-						height: 60px;
-						width: 100%;
-						display: flex;
-						justify-content: space-around;
-						align-items: center;
-						text-align: center;
-						padding: 0 25px;
-					}
-					td{
-						height: 60px;
-						width: 20%;
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						text-align: center;
-						padding: 0 25px;
-					}
-				</style>
-				<tr> 
-					<th > Código </th>
-					<th> RGF </th>
-					<th> Nome </th>
-					<th> Cargo </th>
-					<th> Rendimento </th>
-				</tr>
-				<?php while($dado = $con->fetch_array()){ ?>
-				<tr>
-					<td> <?php echo $dado["codigo"]; ?> </td>
-					<td> <?php echo $dado["rgf"]; ?> </td>
-					<td> <?php echo $dado["nome"]; ?></td>
-					<td> <?php echo $dado["cargo"]; ?></td>
-				    <td> R$ <?php echo $dado["rendimentos"];?></td> 
-				</tr>
-			<?php } ?>
-			</table>
+		<div class="container conteudo-sobreposto">
+			<div class="cartao">
+				<p class="aviso-fonte"><span data-icone="info"></span><span>Dados gravados no banco MySQL pelo crawler <code>crawler/servidores/crawler_servidores.php --banco</code>, a partir do portal da prefeitura.</span></p>
 
-			 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-			 <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-  			 <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-  			   <script>
-				  $(document).ready(function(){
-				      $('#minhaTabela').DataTable();
-				  });
-  				</script>
+				<form class="filtros" role="search" method="get" action="Servidores.php">
+					<label class="lista-busca">
+						<span data-icone="lupa"></span>
+						<span class="visualmente-oculto">Pesquisar por nome, cargo ou RGF</span>
+						<input type="search" name="busca" value="<?= e($busca) ?>" placeholder="Pesquisar por nome, cargo ou RGF" autocomplete="off">
+					</label>
+					<input type="hidden" name="ordem" value="<?= e($ordem) ?>">
+					<input type="hidden" name="dir" value="<?= e($direcao) ?>">
+					<label>
+						<span class="visualmente-oculto">Servidores por página</span>
+						<select name="por" onchange="this.form.submit()">
+							<?php foreach ([25, 50, 100] as $opcao): ?>
+							<option value="<?= $opcao ?>"<?= $opcao === $porPagina ? ' selected' : '' ?>><?= $opcao ?> por página</option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+					<button class="botao botao--primario" type="submit">Pesquisar</button>
+				</form>
+
+				<p class="resumo-tabela"><?= $encontrados === $total ? numero($total) . ' servidores' : numero($encontrados) . ' de ' . numero($total) . ' servidores' ?></p>
+
+				<div class="tabela-rolagem">
+					<table class="tabela">
+						<thead>
+							<tr>
+								<?= cabecalhoColuna('rgf', 'RGF') ?>
+								<?= cabecalhoColuna('nome', 'Nome') ?>
+								<?= cabecalhoColuna('cargo', 'Cargo') ?>
+								<?= cabecalhoColuna('rendimentos', 'Salário bruto', 'num') ?>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if (!$servidores): ?>
+							<tr><td colspan="4" class="vazio">Nenhum servidor encontrado.</td></tr>
+							<?php endif; ?>
+							<?php foreach ($servidores as $s): ?>
+							<tr>
+								<td data-coluna="rgf"><?= destacar($s['rgf']) ?></td>
+								<td data-coluna="nome"><?= destacar($s['nome']) ?></td>
+								<td data-coluna="cargo"><?= destacar($s['cargo']) ?></td>
+								<td data-coluna="rendimentos" class="num"><?= reais($s['rendimentos']) ?></td>
+							</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+
+				<nav class="paginacao" aria-label="Páginas">
+					<span>Página <?= $pagina ?> de <?= $paginas ?></span>
+					<div class="paginacao-botoes">
+						<?php if ($pagina > 1): ?><a href="<?= e(url(['pagina' => $pagina - 1])) ?>">Anterior</a><?php else: ?><span aria-disabled="true">Anterior</span><?php endif; ?>
+						<?php if ($pagina < $paginas): ?><a href="<?= e(url(['pagina' => $pagina + 1])) ?>">Próxima</a><?php else: ?><span aria-disabled="true">Próxima</span><?php endif; ?>
+					</div>
+				</nav>
+			</div>
 		</div>
+	</main>
+<?php rodape('servidores'); ?>
+	<script>
+		document.querySelectorAll('[data-icone]').forEach(function (el) { el.outerHTML = icone(el.dataset.icone); });
+	</script>
+</body>
 </html>
